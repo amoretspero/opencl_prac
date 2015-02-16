@@ -1,0 +1,28 @@
+Visual Studio Programming rules.(Visual studio 2012, 2013)
+
+1. Including header files.
+	1) Open Solution Explorer.
+	2) Right-click 'source files' and click 'add'.
+	3) Select 'header file', write name and create.
+	4) Right-click 'source files' and click 'add'.
+	5) Select 'C++ file', write name(must be same with .h(header) file.) and create.
+	6) Write codes into name.h and name.cpp
+	7) Write '#include "name.h"' into original code. Done!
+
+2. For OpenCL project.
+	1) Create empty project for C++.
+	2) Right-click the project name and click 'Properties'.
+	3) Go to C/C++ - General tab.
+	4) Set the directory of 'Additional include directories' to folder path of include files provided by GPU Vendor.(Click 'apply' before leave.)
+	5) Go to Linker - General tab.
+	6) Set the directory of 'Additional library directories' to folder path of library files provided by GPU Vendor.(May differ between x32 and x86_64) (Click 'apply' before leave.)
+	7) Go to Linker - Input tab.
+	8) Include 'OpenCL.lib' to the contents of 'Additional dependencies'.(Click 'apply' before leave.)
+	9) Click 'Configuration manager' and click the drop down menu of 'Active solution platform' and select 'new'.
+	10) Select 'x64' and Click OK.
+	11) Done!(9-10 is only for x64 users.)
+
+3. cl::vector class.
+	1) This is declared in C++ wrapper for OpenCL cl.hpp in version 1.1
+	2) From version 1.2, this class is not used anymore, and declared as 'depricated'.
+	3) So, use std::vector class instead and remove '#define __NO_STD_VECTOR' from code.
