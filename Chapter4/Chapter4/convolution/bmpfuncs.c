@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "bmpfuncs.h"
+#pragma warning(disable : 4996)
 
 void storeImage(float *imageOut, const char *filename, int rows, int cols, 
                 const char* refFilename) {
