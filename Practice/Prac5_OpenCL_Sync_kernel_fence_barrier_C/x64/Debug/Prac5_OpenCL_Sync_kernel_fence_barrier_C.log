@@ -1,0 +1,20 @@
+﻿빌드 시작: 2015-02-21 오후 5:08:13
+     1>2 노드의 "D:\OpenCL\Practice\Prac5_OpenCL_Sync_kernel_fence_barrier_C\Prac5_OpenCL_Sync_kernel_fence_barrier_C.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files (x86)\AMD APP SDK\2.9-1\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TC /errorReport:prompt Prac5_OpenCL_Sync_kernel_fence_barrier_C.c
+         Prac5_OpenCL_Sync_kernel_fence_barrier_C.c
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(35): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(43): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(130): warning C4087: 'rand' : 'void' 매개 변수 목록을 사용하여 선언되었습니다.
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(240): warning C4013: 'memset'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(284): warning C4313: 'printf'  : 서식 문자열의 '%d'이(가) 인수 1('char [38]' 형식)과(와) 충돌합니다.
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(151): warning C4101: 'platform_idx' :참조되지 않은 지역 변수입니다.
+     1>Prac5_OpenCL_Sync_kernel_fence_barrier_C.c(177): warning C4101: 'device_type' :참조되지 않은 지역 변수입니다.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\OpenCL\Practice\Prac5_OpenCL_Sync_kernel_fence_barrier_C\x64\Debug\Prac5_OpenCL_Sync_kernel_fence_barrier_C.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\AMD APP SDK\2.9-1\lib\x86_64" OpenCL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\OpenCL\Practice\Prac5_OpenCL_Sync_kernel_fence_barrier_C\x64\Debug\Prac5_OpenCL_Sync_kernel_fence_barrier_C.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\OpenCL\Practice\Prac5_OpenCL_Sync_kernel_fence_barrier_C\x64\Debug\Prac5_OpenCL_Sync_kernel_fence_barrier_C.lib" /MACHINE:X64 x64\Debug\Prac5_OpenCL_Sync_kernel_fence_barrier_C.obj
+         Prac5_OpenCL_Sync_kernel_fence_barrier_C.vcxproj -> D:\OpenCL\Practice\Prac5_OpenCL_Sync_kernel_fence_barrier_C\x64\Debug\Prac5_OpenCL_Sync_kernel_fence_barrier_C.exe
+     1>"D:\OpenCL\Practice\Prac5_OpenCL_Sync_kernel_fence_barrier_C\Prac5_OpenCL_Sync_kernel_fence_barrier_C.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:00.73
