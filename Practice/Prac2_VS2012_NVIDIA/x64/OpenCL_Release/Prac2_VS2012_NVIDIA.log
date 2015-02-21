@@ -1,0 +1,15 @@
+﻿빌드 시작: 2015-02-21 오후 7:14:47
+     1>2 노드의 "E:\OpenCL\opencl_prac\Practice\Prac2_VS2012_NVIDIA\Prac2_VS2012_NVIDIA.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         D:\Visual Studio 2012\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\OpenCL_Release\\" /Fd"x64\OpenCL_Release\vc110.pdb" /Gd /TP /errorReport:prompt Prac2_VS2012_NVIDIA.cpp
+         Prac2_VS2012_NVIDIA.cpp
+       Link:
+         D:\Visual Studio 2012\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"E:\OpenCL\opencl_prac\Practice\Prac2_VS2012_NVIDIA\x64\OpenCL_Release\Prac2_VS2012_NVIDIA.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\x64" OpenCL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\OpenCL\opencl_prac\Practice\Prac2_VS2012_NVIDIA\x64\OpenCL_Release\Prac2_VS2012_NVIDIA.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\OpenCL\opencl_prac\Practice\Prac2_VS2012_NVIDIA\x64\OpenCL_Release\Prac2_VS2012_NVIDIA.lib" /MACHINE:X64 x64\OpenCL_Release\Prac2_VS2012_NVIDIA.obj
+         코드를 생성하고 있습니다.
+         코드를 생성했습니다.
+         Prac2_VS2012_NVIDIA.vcxproj -> E:\OpenCL\opencl_prac\Practice\Prac2_VS2012_NVIDIA\x64\OpenCL_Release\Prac2_VS2012_NVIDIA.exe
+     1>"E:\OpenCL\opencl_prac\Practice\Prac2_VS2012_NVIDIA\Prac2_VS2012_NVIDIA.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:00.85
