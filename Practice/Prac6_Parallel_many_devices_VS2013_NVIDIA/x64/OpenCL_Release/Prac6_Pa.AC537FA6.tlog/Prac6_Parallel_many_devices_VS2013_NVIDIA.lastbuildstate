@@ -1,0 +1,2 @@
+#TargetFrameworkVersion=v4.0:PlatformToolSet=v120:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit
+OpenCL_Release|x64|D:\opencl_prac\Practice\Prac6_Parallel_many_devices_VS2013_NVIDIA\|
