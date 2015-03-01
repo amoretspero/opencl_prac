@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <CL/cl.h>
+#include <math.h>
+#include <float.h>
 
 void chk(cl_int err, const char* cmd)
 {
@@ -117,38 +119,40 @@ int main(int argc, char** argv)
 
 	// Set host data.-----------------------------
 
+	int vector_size = 10000000;
+
 	// Input data a.
-	int size_a = 100;
+	int size_a = vector_size;
 	int mem_size_a = sizeof(float)*size_a;
 	float* a = (float*)malloc(mem_size_a);
 
 	// Input data b.
-	int size_b = 100;
+	int size_b = vector_size;
 	int mem_size_b = sizeof(float)*size_b;
 	float* b = (float*)malloc(mem_size_b);
 
 	// Input data c.
-	int size_c = 100;
+	int size_c = vector_size;
 	int mem_size_c = sizeof(float)*size_c;
 	float* c = (float*)malloc(mem_size_c);
 
 	// Input data d.
-	int size_d = 100;
+	int size_d = vector_size;
 	int mem_size_d = sizeof(float)*size_d;
 	float* d = (float*)malloc(mem_size_d);
 
 	// Input/Output data e.
-	int size_e = 100;
+	int size_e = vector_size;
 	int mem_size_e = sizeof(float)*size_e;
 	float* e = (float*)malloc(mem_size_e);
 
 	// Input/Output data f.
-	int size_f = 100;
+	int size_f = vector_size;
 	int mem_size_f = sizeof(float)*size_f;
 	float* f = (float*)malloc(mem_size_f);
 
 	// Output data g.
-	int size_g = 100;
+	int size_g = vector_size;
 	int mem_size_g = sizeof(float)*size_g;
 	float* g = (float*)malloc(mem_size_g);
 
@@ -172,7 +176,7 @@ int main(int argc, char** argv)
 		d[cnt] = rand() / (float)RAND_MAX;
 	}
 
-	printf("\n\n Initial Vectors : \n");
+	/*printf("\n\n Initial Vectors : \n");
 	printf("Vector a :\n");
 	for (cnt = 0; cnt < size_a; cnt++)
 	{
@@ -208,20 +212,18 @@ int main(int argc, char** argv)
 		{
 			printf("\n");
 		}
-	}
+	}*/
 
 	// Set OpenCL Environment.
 	cl_int status;
-
 	cl_device_id* devices;
 	cl_device_id devices_lst[3];
-	cl_device_id device_0, device_1, device_2;
 	cl_uint num_devices;
 	cl_platform_id* platforms;
 	cl_platform_id platform_0, platform_1, platform_2;
 	cl_uint num_platforms;
-	cl_uint platform_idx;
 
+	// These will indicate which device has been selected.
 	int selected_platform_0;
 	int selected_device_0;
 	int selected_platform_1;
@@ -229,6 +231,7 @@ int main(int argc, char** argv)
 	int selected_platform_2;
 	int selected_device_2;
 
+	// User selection part.
 	printf("Select platform and device to use for Addition of vector a and b.\n");
 	scanf_s("%d %d", &selected_platform_0, &selected_device_0);
 
@@ -238,7 +241,7 @@ int main(int argc, char** argv)
 	printf("Select platform and device to use for final addition of vector a+b and c+d.\n");
 	scanf_s("%d %d", &selected_platform_2, &selected_device_2);
 
-	// Get device information.
+	// Get platform information.
 	status = clGetPlatformIDs(0, NULL, &num_platforms);
 	chk(status, "clGetPlatformIDs");
 	platforms = (cl_platform_id*)malloc(sizeof(cl_platform_id)*num_platforms);
@@ -270,7 +273,7 @@ int main(int argc, char** argv)
 	chk(status, "clGetDeviceIDs");
 	devices_lst[2] = devices[selected_device_2 - 1];
 
-	// Print out selected platform and device info.
+	// Print out selected platform and device info.(Information printed : Platform number, Device number, Device name, Device OpenCL C version, Device type)
 	char* value;
 	int* device_type;
 	size_t valueSize;
@@ -386,7 +389,8 @@ int main(int argc, char** argv)
 	}
 	free(device_type);
 
-	
+	// Create context. Because devices in different platforms cannot share contexts, and user can select any platform and device that exists, three different context will be made.
+	// And that will result in three different queue, kernel and temporary local buffer in host application.
 	cl_context_properties properties_0[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform_0, 0 };
 	cl_context_properties properties_1[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform_1, 0 };
 	cl_context_properties properties_2[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform_2, 0 };
@@ -410,7 +414,8 @@ int main(int argc, char** argv)
 
 	float* intermediate_e_output_local = (float*)malloc(mem_size_e);
 	float* intermediate_f_output_local = (float*)malloc(mem_size_f);
-	float* test = (float*)malloc(mem_size_g);
+	float* test;
+	test = (float*)malloc(mem_size_g);
 	// Declarations of Buffers
 	cl_mem input_a = clCreateBuffer(context_0, CL_MEM_READ_ONLY, mem_size_a, 0, 0);
 	cl_mem input_b = clCreateBuffer(context_0, CL_MEM_READ_ONLY, mem_size_b, 0, 0);
@@ -497,14 +502,13 @@ int main(int argc, char** argv)
 	kernel_2 = clCreateKernel(program_2, "vector_add", &status);
 	chk(status, "clCreateKernel");
 
-	cl_event event_init[2];
-
+	// Write vector a, b, c, d into appropriate buffers. When using clEnqueueWriteBuffer function, the context that queue is defined and buffer is defined have to be same.
 	clEnqueueWriteBuffer(queue_0, input_a, CL_TRUE, 0, mem_size_a, (void*)a, 0, NULL, NULL);
 	clEnqueueWriteBuffer(queue_0, input_b, CL_TRUE, 0, mem_size_b, (void*)b, 0, NULL, NULL);
 	clEnqueueWriteBuffer(queue_1, input_c, CL_TRUE, 0, mem_size_c, (void*)c, 0, NULL, NULL);
 	clEnqueueWriteBuffer(queue_1, input_d, CL_TRUE, 0, mem_size_d, (void*)d, 0, NULL, NULL);
 	
-
+	// Set kernel arguments.
 	clSetKernelArg(kernel_0, 0, sizeof(cl_mem), (void*)&input_a);
 	clSetKernelArg(kernel_0, 1, sizeof(cl_mem), (void*)&input_b);
 	clSetKernelArg(kernel_0, 2, sizeof(cl_mem), (void*)&intermediate_e_output);
@@ -515,30 +519,35 @@ int main(int argc, char** argv)
 	clSetKernelArg(kernel_2, 1, sizeof(cl_mem), (void*)&intermediate_f_input);
 	clSetKernelArg(kernel_2, 2, sizeof(cl_mem), (void*)&output_g);
 	
+	// Set local work group size and global work group size.
+	size_t localws[1] = { 100 };
+	size_t globalws[1] = { vector_size };
 
-	size_t localws[1] = { 4 };
-	size_t globalws[1] = { 100 };
-
+	// Define events for securing buffer write/read operation is done without error.
+	cl_event event_init[2];
 	cl_event event_copy_read[2];
 	cl_event event_copy_write[2];
 	cl_event event_fin;
 
-	clEnqueueNDRangeKernel(queue_0, kernel_0, 1, NULL, globalws, localws, 0, NULL, &event_init[0]);
-	clEnqueueNDRangeKernel(queue_1, kernel_1, 1, NULL, globalws, localws, 0, NULL, &event_init[1]);
+	// Run kernel for queue_0 and queue_1. When these have been finished, event_init will be set.
+	status = clEnqueueNDRangeKernel(queue_0, kernel_0, 1, NULL, globalws, localws, 0, NULL, &event_init[0]);
+	chk(status, "clEnqueueNDRangeKernel");
+	status = clEnqueueNDRangeKernel(queue_1, kernel_1, 1, NULL, globalws, localws, 0, NULL, &event_init[1]);
+	chk(status, "clEnqueueNDRangeKernel");
 
-	clEnqueueReadBuffer(queue_0, intermediate_e_output, CL_TRUE, 0, mem_size_e, (void*)intermediate_e_output_local, 1, &event_init[0], &event_copy_read[0]);
-	clEnqueueReadBuffer(queue_1, intermediate_f_output, CL_TRUE, 0, mem_size_f, (void*)intermediate_f_output_local, 1, &event_init[1], &event_copy_read[1]);
+	// Read buffers that output of above to kernel run is saved to appropriate host local buffers(array of floats).
+	status = clEnqueueReadBuffer(queue_0, intermediate_e_output, CL_TRUE, 0, mem_size_e, (void*)intermediate_e_output_local, 1, &event_init[0], &event_copy_read[0]);
+	chk(status, "clEnqueueReadBuffer");
+	status = clEnqueueReadBuffer(queue_1, intermediate_f_output, CL_TRUE, 0, mem_size_f, (void*)intermediate_f_output_local, 1, &event_init[1], &event_copy_read[1]);
+	chk(status, "clEnqueueReadBuffer");
 
+	// Wait until all objects queued at queue_0 and queue_1 has been executed. 
+	status = clFinish(queue_0);
+	chk(status, "clFinish");
+	status = clFinish(queue_1);
+	chk(status, "clFinish");
 
-	clEnqueueWriteBuffer(queue_2, intermediate_e_input, CL_TRUE, 0, mem_size_e, (void*)intermediate_e_output_local, 1, &event_copy_read[0], &event_copy_write[0]);
-	clEnqueueWriteBuffer(queue_2, intermediate_f_input, CL_TRUE, 0, mem_size_f, (void*)intermediate_f_output_local, 1, &event_copy_read[1], &event_copy_write[1]);
-
-	
-	clEnqueueNDRangeKernel(queue_2, kernel_2, 1, NULL, globalws, localws, 2, event_copy_write, &event_fin);
-
-	clEnqueueReadBuffer(queue_2, intermediate_f_input, CL_TRUE, 0, mem_size_g, (void*)test, 1, &event_fin, NULL);
-
-	for (cnt = 0; cnt < size_g; cnt++)
+	/*for (cnt = 0; cnt < size_g; cnt++)
 	{
 		printf("%f\t", intermediate_e_output_local[cnt]);
 		if ((cnt + 1) % 10 == 0)
@@ -554,9 +563,36 @@ int main(int argc, char** argv)
 		{
 			printf("\n");
 		}
-	}
+	}*/
+	// Wait for copying values from output buffers of kernel_0, kernel_1 to local host buffers to be finished.
+	status = clEnqueueWaitForEvents(queue_0, 1, &event_copy_read[0]);
+	chk(status, "clEnqueueWaitForEvents");
+	status = clEnqueueWaitForEvents(queue_1, 1, &event_copy_read[1]);
+	chk(status, "clEnqueueWaitForEvents");
 
-	printf("Result : \n");
+	// Write values temporarily stored at local host buffer to input buffer for kernel_2. When writing is finished, event_copy_write will be set.
+	status = clEnqueueWriteBuffer(queue_2, intermediate_e_input, CL_TRUE, 0, mem_size_e, (void*)intermediate_e_output_local, 0, NULL, &event_copy_write[0]);
+	chk(status, "clEnqueueWriteBuffer");
+	status = clEnqueueWriteBuffer(queue_2, intermediate_f_input, CL_TRUE, 0, mem_size_f, (void*)intermediate_f_output_local, 0, NULL, &event_copy_write[1]);
+	chk(status, "clEnqueueWriteBuffer");
+	
+	// For time check of last execution.
+	long double start_time = (long double)(clock())/1000000;
+	printf("start_time : %.14f\n", start_time);
+	
+	// Run kernel for queue_2. This will not start until event_copy_write[2]'s elements are all CL_SUCCESS When finished, event_fin will be set.
+	status = clEnqueueNDRangeKernel(queue_2, kernel_2, 1, NULL, globalws, localws, 2, event_copy_write, &event_fin);
+	chk(status, "clEnqueueNDRangeKernel");
+
+	// For time check of last execution.
+	long double end_time = (long double)(clock()) / 1000000;
+	printf("start_time : %.14f\n", end_time);
+
+	// Copy values from output buffer of kernel_2 to float array in host for storing result.
+	status = clEnqueueReadBuffer(queue_2, output_g, CL_TRUE, 0, mem_size_g, (void*)test, 1, &event_fin, NULL);
+	chk(status, "clEnqueueReadBuffer");
+
+	/*printf("Result : \n");
 	for (cnt = 0; cnt < size_g; cnt++)
 	{
 		printf("%f\t", test[cnt]);
@@ -564,7 +600,20 @@ int main(int argc, char** argv)
 		{
 			printf("\n");
 		}
+	}*/
+
+	for (cnt = 0; cnt < size_g; cnt++)
+	{
+		if ((abs(test[cnt] - (a[cnt] + b[cnt] + c[cnt] + d[cnt]))) > 0.000001)
+		{
+			printf("First incorrect addition at %dth element!\n", cnt);
+			system("pause");
+			return 0;
+		}
 	}
+
+	long double elapsed_time = end_time - start_time;
+	printf("Addition successful!\n(Error_max : 0.000001)\nElapsed_time : %.14f\n", elapsed_time);
 
 	clReleaseMemObject(input_a);
 	clReleaseMemObject(input_b);

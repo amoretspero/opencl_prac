@@ -1,15 +1,11 @@
-﻿Build started 2015-03-01 오전 2:17:59.
+﻿Build started 2015-03-01 오후 4:58:31.
      1>Project "D:\opencl_prac\Practice\Prac6_Parallel_many_devices_VS2013_NVIDIA\Prac6_Parallel_many_devices_VS2013_NVIDIA.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\OpenCL_Release\\" /Fd"x64\OpenCL_Release\vc120.pdb" /Gd /TP /errorReport:prompt Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp
          Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(36): warning C4018: '<' : signed/unsigned mismatch
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(44): warning C4018: '<' : signed/unsigned mismatch
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(157): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(218): warning C4101: 'device_1' : unreferenced local variable
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(218): warning C4101: 'device_0' : unreferenced local variable
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(223): warning C4101: 'platform_idx' : unreferenced local variable
-     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(218): warning C4101: 'device_2' : unreferenced local variable
+     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(38): warning C4018: '<' : signed/unsigned mismatch
+     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(46): warning C4018: '<' : signed/unsigned mismatch
+     1>Prac6_Paralle_many_devices_VS2013_NVIDIA.cpp(161): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\opencl_prac\Practice\Prac6_Parallel_many_devices_VS2013_NVIDIA\x64\OpenCL_Release\Prac6_Parallel_many_devices_VS2013_NVIDIA.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\x64" OpenCL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\opencl_prac\Practice\Prac6_Parallel_many_devices_VS2013_NVIDIA\x64\OpenCL_Release\Prac6_Parallel_many_devices_VS2013_NVIDIA.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\opencl_prac\Practice\Prac6_Parallel_many_devices_VS2013_NVIDIA\x64\OpenCL_Release\Prac6_Parallel_many_devices_VS2013_NVIDIA.lib" /MACHINE:X64 x64\OpenCL_Release\Prac6_Paralle_many_devices_VS2013_NVIDIA.obj
          Generating code
@@ -19,4 +15,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.48
+Time Elapsed 00:00:00.47
