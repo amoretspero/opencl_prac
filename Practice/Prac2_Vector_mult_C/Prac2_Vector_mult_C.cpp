@@ -4,10 +4,10 @@
 #include <CL/cl.h>
 #include <CL/opencl.h>
 
-#define width_A 1024
-#define height_A 1024
-#define width_B 1024
-#define height_B 1024
+#define width_A 4096
+#define height_A 4096
+#define width_B 4096
+#define height_B 4096
 #define width_C width_B
 #define height_C height_A
 #define MAX_SOURCE_SIZE 0x100000
@@ -348,7 +348,7 @@ int main(int argc, char** argv)
 
 	// Set work group size of local and global.
 	// Assume that matrix size is dividable by 16.
-	size_t localws[2] = { 32,32 };
+	size_t localws[2] = { 16,16 };
 	size_t globalws[2] = { width_C, height_C };
 
 	clock_t start_OpenCL = clock();

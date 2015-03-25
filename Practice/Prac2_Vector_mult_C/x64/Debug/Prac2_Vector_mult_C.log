@@ -1,4 +1,4 @@
-﻿Build started 2015-03-03 오후 5:33:29.
+﻿Build started 2015-03-04 오후 1:19:57.
      1>Project "D:\opencl_prac\Practice\Prac2_Vector_mult_C\Prac2_Vector_mult_C.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt Prac2_Vector_mult_C.cpp
