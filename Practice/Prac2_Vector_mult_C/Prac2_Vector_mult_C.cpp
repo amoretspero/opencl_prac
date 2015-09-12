@@ -4,16 +4,25 @@
 #include <CL/cl.h>
 #include <CL/opencl.h>
 
-#define width_A 4096
-#define height_A 4096
-#define width_B 4096
-#define height_B 4096
+#include <chrono>
+#include <iostream>
+
+// Define constant values.
+#define width_A 1024
+#define height_A 1024
+#define width_B 1024
+#define height_B 1024
 #define width_C width_B
 #define height_C height_A
 #define MAX_SOURCE_SIZE 0x100000
+#define MAX_ERROR 0.0001
 #define _CRT_SECURE_NO_WARNINGS
 #define CL_LOG_ERRORS = stdout
 
+// namespace for using cout, cin, endl.
+using namespace std;
+
+// randomInit : Fill float array 'data' with size of 'size' with random float numbers.
 void randomInit(float* data, int size)
 {
 	int i;
@@ -23,6 +32,7 @@ void randomInit(float* data, int size)
 	}
 }
 
+// kernel_source_hard_coded : Hard coded kernel source.
 char* kernel_source_hard_coded =
 "// kernel code for simple matrix multiplication.\n"
 "// For valid matrix multiplication, set widthA = heightB.\n"
@@ -42,13 +52,13 @@ char* kernel_source_hard_coded =
 "   outputC[row * widthB + col] = sum;\n"
 "}\n";
 
-#include <stdio.h>
-#include <stdlib.h>
+// Included header files.
 #include <time.h>
 #include <CL/cl.h>
 #include <math.h>
 #include <float.h>
 
+// chk : Print the OpenCL error with error code 'err', and indication string 'cmd' to console.
 void chk(cl_int err, const char* cmd)
 {
 	if (err != CL_SUCCESS)
@@ -58,6 +68,7 @@ void chk(cl_int err, const char* cmd)
 	}
 }
 
+// print_devices : Get all OpenCL platform and each platform's devices. Print each device's device name, device profile, OpenCL C version, device type.
 int print_devices()
 {
 	// Set variables.
@@ -156,8 +167,10 @@ int print_devices()
 	return 0;
 }
 
+// main function.
 int main(int argc, char** argv)
 {
+	// Print all devices' info to console.
 	print_devices();
 
 	// Allocate host memory for matrix A.
@@ -179,21 +192,21 @@ int main(int argc, char** argv)
 	int cnt_A = 0;
 	for (cnt_A = 0; cnt_A < size_A; cnt_A++)
 	{
-		printf("%f ", matrix_A[cnt_A]);
-		if (((cnt_A + 1) % width_A) == 0)
-		{
-			printf("\n");
-		}
+	printf("%f ", matrix_A[cnt_A]);
+	if (((cnt_A + 1) % width_A) == 0)
+	{
+	printf("\n");
+	}
 	}
 	printf("\n\nMatrix_B\n");
 	int cnt_B = 0;
 	for (cnt_B = 0; cnt_B < size_B; cnt_B++)
 	{
-		printf("%f ", matrix_B[cnt_B]);
-		if (((cnt_B + 1) % width_B) == 0)
-		{
-			printf("\n");
-		}
+	printf("%f ", matrix_B[cnt_B]);
+	if (((cnt_B + 1) % width_B) == 0)
+	{
+	printf("\n");
+	}
 	}*/
 
 	// Allocate host memory for the result matrix C.
@@ -216,31 +229,29 @@ int main(int argc, char** argv)
 	printf("Select platform and device to use for Multiplication of Matrix A and B.\n");
 	scanf_s("%d %d", &selected_platform_id, &selected_device_id);
 
-	// Use first platform.
+	// Get all platforms and select platform specified by user.
 	cl_uint numPlatforms = 0;
 	ciErrNum = clGetPlatformIDs(0, NULL, &numPlatforms);
 	cl_platform_id* platform = NULL;
 	platform = (cl_platform_id*)malloc(numPlatforms*sizeof(cl_platform_id));
 	ciErrNum = clGetPlatformIDs(numPlatforms, platform, NULL);
 	selected_platform = platform[selected_platform_id - 1];
-	//cl_platform platform;
-	//ciErrNum = clGetPlatformIDs(1, &platform, NULL);
 
-	// Use first device.
+	// Get all devices in selected_platform and select device specified by user.
 	cl_uint numDevices = 0;
 	ciErrNum = clGetDeviceIDs(selected_platform, CL_DEVICE_TYPE_ALL, 0, NULL, &numDevices);
 	cl_device_id* devices;
 	devices = (cl_device_id*)malloc(numDevices*sizeof(cl_device_id));
 	ciErrNum = clGetDeviceIDs(selected_platform, CL_DEVICE_TYPE_ALL, numDevices, devices, NULL);
 	selected_device = devices[selected_device_id - 1];
-	//cl_device_id device;
-	//ciErrNum = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 1, &device, NULL);
 
 	// Print out selected platform and device info.(Information printed : Platform number, Device number, Device name, Device OpenCL C version, Device type)
 	char* value;
 	int* device_type;
 	size_t valueSize;
+	cl_uint prefVecSizeFloat;
 
+	std::cout << "\n========== Selected Device Information ==========\n" << std::endl;
 	ciErrNum = clGetDeviceInfo(selected_device, CL_DEVICE_NAME, 0, NULL, &valueSize);
 	chk(ciErrNum, "clGetDeviceInfo");
 	value = (char*)malloc(valueSize);
@@ -255,12 +266,12 @@ int main(int argc, char** argv)
 	chk(ciErrNum, "clGetDeviceInfo");
 	printf("OpenCL C version - %s\n", value);
 	free(value);
-	ciErrNum = clGetDeviceInfo(selected_device, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT, 0, NULL, &valueSize);
+	/*ciErrNum = clGetDeviceInfo(selected_device, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT, 0, NULL, &valueSize);
 	chk(ciErrNum, "clGetDeviceInfo");
 	value = (char*)malloc(valueSize);
-	ciErrNum = clGetDeviceInfo(selected_device, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT, valueSize, value, NULL);
-	printf("Preferred vector width for float - %f\n", value);
-	free(value);
+	ciErrNum = clGetDeviceInfo(selected_device, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT, (sizeof cl_uint), (void*)prefVecSizeFloat, NULL);
+	printf("Preferred vector width for float - %u\n", (unsigned int)prefVecSizeFloat);
+	free(value);*/
 	ciErrNum = clGetDeviceInfo(selected_device, CL_DEVICE_TYPE, 0, NULL, &valueSize);
 	chk(ciErrNum, "clGetDeviceInfo");
 	device_type = (int*)malloc(valueSize);
@@ -283,7 +294,9 @@ int main(int argc, char** argv)
 		printf("Device type - %s\n\n", "UNKNOWN_TYPE");
 	}
 	free(device_type);
+	std::cout << "==============================\n" << std::endl;
 
+	// Create context_properties variable. This will be used for creating context with selected device.
 	cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)selected_platform, 0 };
 
 	// Create context.
@@ -292,12 +305,12 @@ int main(int argc, char** argv)
 	// Create command queue.
 	cl_command_queue myqueue = clCreateCommandQueue(ctx, selected_device, 0, &ciErrNum);
 
-	// Load the OpenCL kernel.
+	// Load the OpenCL kernel. If failed, exit program. Loaded kernel will be stored in 'kernel_source', its size in 'kernel_size'.
 	FILE* opencl_kernel;
 	char* kernel_source;
 	size_t kernel_size;
 
-	fopen_s(&opencl_kernel, "Prac2_Vector_mult_C.cl", "r");
+	fopen_s(&opencl_kernel, "MatrixMultiply.cl", "r");
 	if (!opencl_kernel)
 	{
 		printf("Failed to load kernel.\n");
@@ -324,6 +337,7 @@ int main(int argc, char** argv)
 	// Locate spaces for matrix C on device.
 	cl_mem bufferC = clCreateBuffer(ctx, CL_MEM_WRITE_ONLY, mem_size_C, NULL, &ciErrNum);
 
+	// Create OpenCL program. 
 	cl_program matrix_mul_prog = clCreateProgramWithSource(ctx, 1, (const char**)&kernel_source, (const size_t*)&kernel_size, &ciErrNum);
 
 	// Compile program.
@@ -346,13 +360,15 @@ int main(int argc, char** argv)
 	clSetKernelArg(matrix_mul_kernel, 5, sizeof(cl_mem), (void*)&bufferA);
 	clSetKernelArg(matrix_mul_kernel, 6, sizeof(cl_mem), (void*)&bufferB);
 
-	// Set work group size of local and global.
+	// Set work group size of local and global. Size should be appropriately selected.
 	// Assume that matrix size is dividable by 16.
-	size_t localws[2] = { 16,16 };
+	size_t localws[2] = { 4, 4 };
 	size_t globalws[2] = { width_C, height_C };
 
-	clock_t start_OpenCL = clock();
-	printf("clock : %d\n", start_OpenCL);
+	// system_clock for saving start time of running OpenCL kernel.
+	std::chrono::system_clock::time_point start_OpenCL_chrono = std::chrono::system_clock::now();
+
+	std::cout << "Now running OpenCL kernel...\n" << std::endl;
 
 	// Run kernel.
 	ciErrNum = clEnqueueNDRangeKernel(myqueue, matrix_mul_kernel, 2, NULL, globalws, localws, 0, NULL, NULL);
@@ -360,24 +376,28 @@ int main(int argc, char** argv)
 	// Read result data to host.
 	ciErrNum = clEnqueueReadBuffer(myqueue, bufferC, CL_TRUE, 0, mem_size_C, (void*)matrix_C, 0, NULL, NULL);
 
-	clock_t end_OpenCL = clock();
-	printf("clock : %d\n", end_OpenCL);
+	std::cout << "OpenCL computation done.\n" << std::endl;
+
+	// system_clock for saving end time of running OpenCL kernel.
+	std::chrono::system_clock::time_point end_OpenCL_chrono = std::chrono::system_clock::now();
 
 	// Print out the results.
 	/*printf("\n\nMatrix C (results)\n");
 	int cnt_C = 0;
 	for (cnt_C = 0; cnt_C < size_C; cnt_C++)
 	{
-		printf("%f ", matrix_C[cnt_C]);
-		if (((cnt_C + 1) % width_C) == 0)
-		{
-			printf("\n");
-		}
-	}*/
+	printf("%f ", matrix_C[cnt_C]);
+	if (((cnt_C + 1) % width_C) == 0)
+	{
 	printf("\n");
+	}
+	}*/
+	
+	// system_clock for saving start time of C program(equivalent to OpenCL kernel).
+	std::chrono::system_clock::time_point start_C_chrono = std::chrono::system_clock::now();
 
-	/*clock_t start_C = clock();
-	printf("clock : %d\n", start_C);
+	std::cout << "Now running C program...\n" << std::endl;
+
 	float* sum;
 	sum = (float*)malloc(sizeof(float)*width_A*height_A);
 	float* C_res;
@@ -387,14 +407,49 @@ int main(int argc, char** argv)
 		float temp = 0.0;
 		for (int j = 0; j < width_A; j++)
 		{
-			temp += matrix_A[(i / width_C)*height_A + j] * matrix_B[(j * (i / width_C)) + (i % width_C)];
+			temp += matrix_A[(i / width_C)*height_A + j] * matrix_B[(j * width_C) + (i % width_C)];
 		}
 		C_res[i] = temp;
 	}
-	clock_t end_C = clock();
-	printf("clock : %d\n", end_C);*/
-	printf("OpenCL used %d clock cycles\n", (end_OpenCL - start_OpenCL));
-	//printf("C Used %d clock cycles\n", (end_C - start_C));
+	std::cout << "C computation done.\n" << std::endl;
+
+	// system_clock for saving end time of C Program.
+	std::chrono::system_clock::time_point end_C_chrono = std::chrono::system_clock::now();
+
+	std::cout << "========== Now checking correctivity ==========" << std::endl;
+
+	// Verify results with maximum allowed error of MAX_ERROR.
+	int corr = 0;
+	for (int cnt = 0; cnt < width_C*height_C; cnt++)
+	{
+		if (std::abs(C_res[cnt] - matrix_C[cnt]) > MAX_ERROR)
+		{
+			corr = -1;
+			printf("C_res[cnt] : %f, matrix_C[cnt] : %f\n", C_res[cnt], matrix_C[cnt]);
+		}
+	}
+
+	// Print result of verification to console.
+	if (corr == -1)
+	{
+		printf("\nResult : Not Correct (MAX_ERROR : %f)\n\n", MAX_ERROR);
+	}
+	else
+	{
+		printf("\nResult : Correct (MAX_ERROR : %f)\n\n", MAX_ERROR);
+	}
+	
+	// Calculate time spent with OpenCL kernel and C program.
+	std::chrono::duration<double, std::milli> duration_C = end_C_chrono - start_C_chrono;
+	std::chrono::duration<double, std::milli> duration_OpenCL = end_OpenCL_chrono - start_OpenCL_chrono;
+
+	// Print time info to console.
+	std::cout << "========== Time Elapsed ==========" << std::endl;
+	std::cout << "OpenCL : \t" << duration_OpenCL.count() << "(ms)" << std::endl;
+	std::cout << "C : \t\t" << duration_C.count() << "(ms)" << std::endl;
+	std::cout << "========== Computation Finished ==========" << std::endl;
+	/*printf("OpenCL used %d clock cycles\n", (end_OpenCL - start_OpenCL));
+	printf("C Used %d clock cycles\n", (end_C - start_C));*/
 
 	// Clean up the memory.
 
@@ -406,12 +461,14 @@ int main(int argc, char** argv)
 	clReleaseProgram(matrix_mul_prog);
 	clReleaseCommandQueue(myqueue);
 
-	//free(device);
+	// Free the pointers.
 	free(kernel_source);
 	free(matrix_A);
 	free(matrix_B);
 	free(matrix_C);
 
+	// For Release build, this should be uncommented.
+	// For Debug build, this should be commented.
 	system("pause");
 
 	return 0;
